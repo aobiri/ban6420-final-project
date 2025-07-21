@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Product Launch Survey</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #2c5aa0;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #2c5aa0;
+        }
+        
+        .expense-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        
+        .expense-section h3 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+        }
+        
+        .expense-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .expense-item input[type="checkbox"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+        
+        .expense-label {
+            flex: 1;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+        
+        .expense-input {
+            width: 150px;
+            margin-left: 15px;
+        }
+        
+        .expense-input input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .expense-input input:disabled {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #2c5aa0, #3a6bb0);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(44, 90, 160, 0.3);
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .required {
+            color: #e74c3c;
+        }
+        
+        .dashboard-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .dashboard-link a {
+            color: #2c5aa0;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .dashboard-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Healthcare Product Launch Survey</h1>
+        <p class="subtitle">Help us understand spending patterns for our upcoming healthcare product launch</p>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="/submit" id="surveyForm">
+            <div class="form-group">
+                <label for="age">Age <span class="required">*</span></label>
+                <input type="number" id="age" name="age" min="18" max="100" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="gender">Gender <span class="required">*</span></label>
+                <select id="gender" name="gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="total_income">Total Monthly Income ($) <span class="required">*</span></label>
+                <input type="number" id="total_income" name="total_income" step="0.01" min="0" required>
+            </div>
+            
+            <div class="expense-section">
+                <h3>Monthly Expenses</h3>
+                <p style="margin-bottom: 20px; color: #666; font-size: 14px;">
+                    Please check the categories that apply to you and enter the monthly amount for each.
+                </p>
+                
+                <div class="expense-item">
+                    <input type="checkbox" id="utilities_checkbox" name="utilities_checkbox" onchange="toggleExpenseInput('utilities')">
+                    <label for="utilities_checkbox" class="expense-label">Utilities (electricity, water, gas, internet)</label>
+                    <div class="expense-input">
+                        <input type="number" id="utilities_amount" name="utilities_amount" step="0.01" min="0" placeholder="Amount ($)" disabled>
+                    </div>
+                </div>
+                
+                <div class="expense-item">
+                    <input type="checkbox" id="entertainment_checkbox" name="entertainment_checkbox" onchange="toggleExpenseInput('entertainment')">
+                    <label for="entertainment_checkbox" class="expense-label">Entertainment (movies, dining, hobbies)</label>
+                    <div class="expense-input">
+                        <input type="number" id="entertainment_amount" name="entertainment_amount" step="0.01" min="0" placeholder="Amount ($)" disabled>
+                    </div>
+                </div>
+                
+                <div class="expense-item">
+                    <input type="checkbox" id="school_fees_checkbox" name="school_fees_checkbox" onchange="toggleExpenseInput('school_fees')">
+                    <label for="school_fees_checkbox" class="expense-label">School Fees (tuition, education costs)</label>
+                    <div class="expense-input">
+                        <input type="number" id="school_fees_amount" name="school_fees_amount" step="0.01" min="0" placeholder="Amount ($)" disabled>
+                    </div>
+                </div>
+                
+                <div class="expense-item">
+                    <input type="checkbox" id="shopping_checkbox" name="shopping_checkbox" onchange="toggleExpenseInput('shopping')">
+                    <label for="shopping_checkbox" class="expense-label">Shopping (clothing, groceries, household items)</label>
+                    <div class="expense-input">
+                        <input type="number" id="shopping_amount" name="shopping_amount" step="0.01" min="0" placeholder="Amount ($)" disabled>
+                    </div>
+                </div>
+                
+                <div class="expense-item">
+                    <input type="checkbox" id="healthcare_checkbox" name="healthcare_checkbox" onchange="toggleExpenseInput('healthcare')">
+                    <label for="healthcare_checkbox" class="expense-label">Healthcare (medical, insurance, medications)</label>
+                    <div class="expense-input">
+                        <input type="number" id="healthcare_amount" name="healthcare_amount" step="0.01" min="0" placeholder="Amount ($)" disabled>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn">Submit Survey</button>
+        </form>
+        
+        <div class="dashboard-link">
+            <a href="/dashboard">View Survey Dashboard</a>
+        </div>
+    </div>
+    
+    <script>
+        function toggleExpenseInput(category) {
+            const checkbox = document.getElementById(category + '_checkbox');
+            const input = document.getElementById(category + '_amount');
+            
+            if (checkbox.checked) {
+                input.disabled = false;
+                input.focus();
+            } else {
+                input.disabled = true;
+                input.value = '';
+            }
+        }
+        
+        // Form validation
+        document.getElementById('surveyForm').addEventListener('submit', function(e) {
+            const income = parseFloat(document.getElementById('total_income').value);
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            
+            let totalExpenses = 0;
+            let hasValidExpense = false;
+            
+            checkboxes.forEach(function(checkbox) {
+                const category = checkbox.name.replace('_checkbox', '');
+                const amountInput = document.getElementById(category + '_amount');
+                const amount = parseFloat(amountInput.value);
+                
+                if (amount && amount > 0) {
+                    totalExpenses += amount;
+                    hasValidExpense = true;
+                } else {
+                    alert('Please enter a valid amount for ' + category.replace('_', ' ') + ' or uncheck the category.');
+                    e.preventDefault();
+                    return;
+                }
+            });
+            
+            if (totalExpenses > income) {
+                if (!confirm('Your total expenses ($' + totalExpenses.toFixed(2) + ') exceed your total income ($' + income.toFixed(2) + '). Do you want to proceed?')) {
+                    e.preventDefault();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

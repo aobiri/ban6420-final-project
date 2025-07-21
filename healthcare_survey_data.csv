@@ -1,0 +1,3 @@
+user_id,age,gender,total_income,total_expenses,savings,savings_rate,utilities,entertainment,school_fees,shopping,healthcare,submission_date
+687e61ed75005f62bbb57f7e,20,Male,1000.0,273.0,727.0,72.7,20.0,10.0,193.0,50.0,0.0,2025-07-21 15:51:09
+687e8628ab3dfe6640722ea1,34,Female,2000.0,385.0,1615.0,80.75,50.0,30.0,180.0,100.0,25.0,2025-07-21 18:25:44
