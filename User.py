@@ -103,7 +103,7 @@ class SurveyDataManager:
         Args:
             mongo_uri (str): MongoDB connection string
         """
-        self.mongo_uri = mongo_uri or os.environ.get('MONGO_URI', 'mongodb://localhost:27017/')
+        self.mongo_uri = mongo_uri or os.environ.get('MONGO_URI', 'mongodb://52.22.160.93:27017/') # AWS
         self.client = None
         self.db = None
         self.collection = None
