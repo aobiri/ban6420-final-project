@@ -64,6 +64,8 @@ python app.py
 ```
 
 The application will be available at: http://localhost:5000
+But remotely on AWS at: http://52.22.160.93:5000/
+
 
 ## Features
 
